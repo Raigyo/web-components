@@ -16,9 +16,15 @@ Web Components are a set of web platform APIs that allow you to create new custo
 
 - **Deprecated - HTML Imports**: Was: `<link rel="import" href="myfile.html">`. This feature is **obsolete**. Although it may still work in some browsers, its use is discouraged since it could be removed at any time. Try to avoid using it.
 
+## Callbacks
+
+*connectedCallback*: Invoked each time the custom element is appended into a document-connected element. This will happen each time the node is moved, and may happen before the element's contents have been fully parsed.
+
+*attributeChangedCallback*: Invoked each time one of the custom element's attributes is added, removed, or changed. Which attributes to notice change for is specified in a static get observedAttributes method
+
 ## Useful links
 - [codeconcept/webcompomisc](https://github.com/codeconcept/webcompomisc)
 - [codeconcept/webcompomap](https://github.com/codeconcept/webcompomap)
 - [MDN: Web Components](https://developer.mozilla.org/en-US/docs/Web/Web_Components)
-- []()
+- [MDN: Using custom elements](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements)
 - []()
