@@ -22,9 +22,33 @@ Web Components are a set of web platform APIs that allow you to create new custo
 
 *attributeChangedCallback*: Invoked each time one of the custom element's attributes is added, removed, or changed. Which attributes to notice change for is specified in a static get observedAttributes method
 
+## Shadow DOM
+
+The ShadowRoot interface of the Shadow DOM API is the root node of a DOM subtree that is rendered separately from a document's main DOM tree. With Shadow DOM, each component instance is encapsulated in its own DOM.
+
+The Element.attachShadow() method attaches a shadow DOM tree to the specified element and returns a reference to its ShadowRoot.
+
+![shadow-dom-console.png](_readme-img/shadow-dom-console.png)
+
+## Properties vs Attributes
+
+Properties are available on a DOM node when being manipulated by JavaScript.
+
+````js
+const myElem = document.querySelector('.my-elem');
+
+myElem.className; // className is a property
+````
+
+And attributes are provided in the HTML itself. Here *alt*, *width* and *height* are all attributes.
+
+````js
+<img src="/path/to/img.svg" alt="My Image" width="150" height="250">
+````
+
 ## Useful links
 - [codeconcept/webcompomisc](https://github.com/codeconcept/webcompomisc)
 - [codeconcept/webcompomap](https://github.com/codeconcept/webcompomap)
 - [MDN: Web Components](https://developer.mozilla.org/en-US/docs/Web/Web_Components)
 - [MDN: Using custom elements](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements)
-- []()
+- [Attributes and Properties in Custom Elements](https://alligator.io/web-components/attributes-properties/)

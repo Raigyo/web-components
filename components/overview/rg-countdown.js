@@ -2,7 +2,14 @@ class RgCountDown extends HTMLElement {
   constructor() {
     super();
 
-    // DOM elements
+    /* Shadow DOM elements (used to solve encapsulation
+    problems by encupsulating each component instance in its own DOM and
+    and so in this exemple be able to use several counters on the same page) */
+    this._root = this.attachShadow({ mode: "open" });
+    /* Now we can replace all 'document.' with 'this._root.' and also we have to use the root for
+    CSS template */
+
+    // DOM elements specific to the view
     this._btnStart = null;
     this._btnStop = null;
     this._currentValueParagraph = null;
@@ -20,7 +27,7 @@ class RgCountDown extends HTMLElement {
   connectedCallback() {
     console.log("rg-countdown connected");
     // create the view
-    this.innerHTML = `
+    this._root.innerHTML = `
       <style>
           #txtCurrentValue {
               font-size: 24px;
@@ -35,7 +42,7 @@ class RgCountDown extends HTMLElement {
       </div>
     `;
 
-    this._btnStart = document.querySelector("#btnStart");
+    this._btnStart = this._root.querySelector("#btnStart");
     this._btnStart.addEventListener("click", (event) => {
       console.log("click start");
       this._btnStart.innerText = "Pause";
@@ -47,49 +54,54 @@ class RgCountDown extends HTMLElement {
       }
     });
 
-    this._btnStop = document.querySelector("#btnStop");
+    this._btnStop = this._root.querySelector("#btnStop");
     this._btnStop.addEventListener("click", (event) => {
       console.log("click stop");
       this._stopCountDown();
     });
 
-    this._purposeTitle = document.querySelector("#purpose");
+    this._purposeTitle = this._root.querySelector("#purpose");
+    // getAttribute: retrieve initial value
     this._purposeTitle.innerHTML =
       this.getAttribute("purpose") || this._purpose;
 
-    this._currentValueParagraph = document.querySelector("#txtCurrentValue");
+    this._currentValueParagraph = this._root.querySelector("#txtCurrentValue");
     this._currentValueParagraph.innerText = this._currentValue;
   }
 
-  // Getter for html attributes that we want to observe
+  // observedAttributes: Getter for html attributes that we want to observe (returned as array)
   static get observedAttributes() {
     return ["duration", "purpose"];
   }
 
-  // Callback to observe values (called once by attribute each time values are changed)
+  /* attributeChangedCallback: Callback to observe values
+   (called once by attribute each time values are changed) */
   attributeChangedCallback(name, oldValue, newValue) {
-    // console.log(
-    //   "RgCountDown attribute changed: ",
-    //   name,
-    //   " / ",
-    //   oldValue,
-    //   " / ",
-    //   newValue
-    // );
+    /* prettier-ignore */
+    console.log("RgCountDown attribute changed: ", name," / ", oldValue, " / ", newValue);
     if (name === "duration") {
-      this._duration = parseInt(newValue);
-      this._currentValue = this._duration;
-      if (this._currentValueParagraph) {
-        this._currentValueParagraph.innerText = newValue;
-      }
+      this._setDuration(newValue);
     }
 
     if (name === "purpose") {
-      // this._setPurpose(newValue);
-      this._purpose = newValue;
-      if (this._purposeTitle) {
-        this._purposeTitle.innerHTML = newValue;
-      }
+      this._setPurpose(newValue);
+    }
+  }
+
+  _setDuration(value) {
+    if (value === null) return;
+    this._duration = parseInt(value);
+    this._currentValue = this._duration;
+    if (this._currentValueParagraph) {
+      this._currentValueParagraph.innerText = value;
+    }
+  }
+
+  _setPurpose(value) {
+    if (value === null) return;
+    this._purpose = value;
+    if (this._purposeTitle) {
+      this._purposeTitle.innerHTML = value;
     }
   }
 
