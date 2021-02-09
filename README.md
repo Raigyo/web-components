@@ -46,9 +46,27 @@ And attributes are provided in the HTML itself. Here *alt*, *width* and *height*
 <img src="/path/to/img.svg" alt="My Image" width="150" height="250">
 ````
 
+## Google maps
+
+An account on [https://console.cloud.google.com/](https://console.cloud.google.com/) is needed.
+Then create an application and generate an API key.
+
+In HTML:
+
+````html
+<script async
+    src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
+</script>
+````
+
+This service must be activated.
+
+![google-cloud-activate.png](_readme-img/google-cloud-activate.png)
+
 ## Useful links
 - [codeconcept/webcompomisc](https://github.com/codeconcept/webcompomisc)
 - [codeconcept/webcompomap](https://github.com/codeconcept/webcompomap)
 - [MDN: Web Components](https://developer.mozilla.org/en-US/docs/Web/Web_Components)
 - [MDN: Using custom elements](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements)
 - [Attributes and Properties in Custom Elements](https://alligator.io/web-components/attributes-properties/)
+- [ApiNotActivatedMapError for simple html page using google-places-api](https://stackoverflow.com/questions/35700182/apinotactivatedmaperror-for-simple-html-page-using-google-places-api)
