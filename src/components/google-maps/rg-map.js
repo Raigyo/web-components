@@ -24,7 +24,6 @@ class RgMap extends HTMLElement {
   }
   connectedCallback() {
     console.log("rg-map added to DOM");
-    console.log(this._geoData.center.lat);
 
     this._root.innerHTML = `
       <style>
@@ -40,24 +39,40 @@ class RgMap extends HTMLElement {
     this._mapDiv = this._root.getElementById("map");
     this._mapTitle = this._root.getElementById("map-title");
     this._root.appendChild(this._mapDiv);
-    this._map = L.map(this._mapDiv).setView(
-      [this._geoData.center.lat, this._geoData.center.lng],
-      this._geoData.center.zoom
-    );
-    L.tileLayer(
-      "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
-      {
-        attribution:
-          'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-        maxZoom: 18,
-        id: "mapbox/streets-v11",
-        tileSize: 512,
-        zoomOffset: -1,
-        accessToken:
-          "pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw",
-      }
-    ).addTo(this._map);
+    this._render();
   }
+  _render() {
+    // console.log("L.map", L.map);
+    if (!L.map) {
+      console.log("Maps are not ready");
+      return;
+    } else {
+      this._map = L.map(this._mapDiv).setView(
+        [this._geoData.center.lat, this._geoData.center.lng],
+        this._zoom
+      );
+      // URL below is for 'mapbox'. It works for all countries but it's a private service.
+      // It can be replaced by open products:
+      // Belgium: https://tile.openstreetmap.be/osmbe/{z}/{x}/{y}.png
+      // France: https://tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png
+      // In this case no "accessToken" is required
+      // WARNING: lat and lng have to be in the scope of countries maps otherwise
+      // server will send 404 error
+      L.tileLayer(
+        "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
+        {
+          attribution:
+            'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+          maxZoom: 18,
+          id: "mapbox/streets-v11",
+          tileSize: 512,
+          zoomOffset: -1,
+          accessToken:
+            "pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw",
+        }
+      ).addTo(this._map);
+    }
+  } // \ connectedCallback()
 } // \ class
 
 // New tag creation define ('tag', ClassInstance)
