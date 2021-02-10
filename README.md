@@ -70,3 +70,5 @@ This service must be activated.
 - [MDN: Using custom elements](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements)
 - [Attributes and Properties in Custom Elements](https://alligator.io/web-components/attributes-properties/)
 - [ApiNotActivatedMapError for simple html page using google-places-api](https://stackoverflow.com/questions/35700182/apinotactivatedmaperror-for-simple-html-page-using-google-places-api)
+- [Leaflet Tutorials](https://leafletjs.com/examples.html)
+- [Webcomponent with internal js and css doesn't show content](https://stackoverflow.com/questions/58272007/webcomponent-with-internal-js-and-css-doesnt-show-content)
