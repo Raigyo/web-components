@@ -12,14 +12,16 @@
   
    <!-- Make sure you put this AFTER Leaflet's CSS -->
    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
-   <script src="src/components/map-display/rg-map-os.js"></script>
+   <script src="src/components/map-display/rg-map-mapbox.js"></script>
 
 
   <title>Web components - Display maps</title>
 </head>
 <body>
   <h1>Web components - Display maps</h1>
-  <rg-map-os zoom=10 map-title="Liège"></rg-map-os>
+  <h2>Using Open Street map and api.mapbox.com</h2>
+  <rg-map-mapbox zoom=10 map-title="Liège"></rg-map-mapbox>
+  <rg-map-mapbox zoom=10 map-title="Rennes" lat=48.1173 lng=-1.6778></rg-map-mapbox>
 </body>
 
 </html>

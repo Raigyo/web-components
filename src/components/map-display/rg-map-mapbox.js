@@ -6,20 +6,20 @@ class RgMap extends HTMLElement {
     // Shadow DOM elements
     this._root = this.attachShadow({ mode: "open" });
 
-    // watched datas (default values")
-    this._zoom = 1; // used with attribute zoom
-    this._title = "Town"; // used with attribute map-title
-
     // DOM elements
     // this._zoomValue = null;
     this._mapTitle = null;
     this._mapDiv = null;
     this._map = null;
+
+    // watched datas (default values)
+    this._zoom = 1; // used with attribute zoom
+    this._title = "Town"; // used with attribute map-title
     // data
     this._geoData = {
       center: {
-        lat: 50.6412,
-        lng: 5.5718,
+        lat: 50.6412, // used with attribute lat
+        lng: 5.5718, // used with attribute lng
       },
     };
   } // \ CONSTRUCTOR
@@ -36,13 +36,17 @@ class RgMap extends HTMLElement {
       }
       </style>
       <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
-      <h1 id="map-title"></h1>
+      <h3 id="map-title"></h3>
       <div id="map"></div>
     `;
     this._mapDiv = this._root.querySelector("#map");
     this._mapTitle = this._root.querySelector("#map-title");
     this._mapTitle.innerHTML = this.getAttribute("map-title") || this._title;
     this._zoom = this.getAttribute("zoom") || this._zoom;
+    this._geoData.center.lat =
+      this.getAttribute("lat") || this._geoData.center.lat;
+    this._geoData.center.lng =
+      this.getAttribute("lng") || this._geoData.center.lng;
     this._root.appendChild(this._mapDiv);
     this._render();
   }
@@ -52,10 +56,13 @@ class RgMap extends HTMLElement {
       console.log("Maps are not ready");
       return;
     } else {
-      console.log("var this._zoom: ", this._zoom);
+      // console.log("var this._zoom: ", this._zoom);
       this._map = L.map(this._mapDiv).setView(
-        [this._geoData.center.lat, this._geoData.center.lng],
-        this._zoom
+        [
+          parseFloat(this._geoData.center.lat),
+          parseFloat(this._geoData.center.lng),
+        ],
+        parseInt(this._zoom)
       );
       // URL below is for 'mapbox'. It works for all countries but it's a private service.
       // It can be replaced by open products:
@@ -84,11 +91,17 @@ class RgMap extends HTMLElement {
     console.log("name: ", name, "oldValue: ", oldValue, "newValue: ", newValue);
     if (this._mapDiv === null) return;
     if (name === "zoom") {
-      console.log("Call set zoom");
+      // console.log("Call set zoom");
       this._setZoom(newValue);
     }
     if (name === "map-title") {
       this._setTitle(newValue);
+    }
+    if (name === "lat") {
+      this._setLat(newValue);
+    }
+    if (name === "lng") {
+      this._setLng(newValue);
     }
   } // \ attributeChangedCallback()
 
@@ -96,7 +109,7 @@ class RgMap extends HTMLElement {
 
   // GETTERS / OBSERVERS (used with attributeChangedCallback())
   static get observedAttributes() {
-    return ["zoom", "map-title"];
+    return ["zoom", "map-title", "lat", "lng"];
   }
   // \ GETTERS / OBSERVERS
 
@@ -104,21 +117,37 @@ class RgMap extends HTMLElement {
   _setZoom(value) {
     if (value === null) return;
     this._zoom = parseInt(value);
-    console.log("new var this._zoom: ", this._zoom);
+    // console.log("new var this._zoom: ", this._zoom);
     this._map.remove(); // we remove the map to avoid error "map already rendered"
     this._render(); // and we rerender it again
   }
 
   _setTitle(value) {
-    console.log("SetTitle");
+    // console.log("SetTitle");
     if (value === null) return;
     this._title = value;
     if (this._mapTitle) {
       this._mapTitle.innerHTML = value;
     }
   }
+
+  _setLat(value) {
+    if (value === null) return;
+    this._geoData.center.lat = parseFloat(value);
+    // console.log("new var this._zoom: ", this._zoom);
+    this._map.remove(); // we remove the map to avoid error "map already rendered"
+    this._render(); // and we rerender it again
+  }
+
+  _setLng(value) {
+    if (value === null) return;
+    this._geoData.center.lng = parseFloat(value);
+    // console.log("new var this._zoom: ", this._zoom);
+    this._map.remove(); // we remove the map to avoid error "map already rendered"
+    this._render(); // and we rerender it again
+  }
   // \ SETTERS
 } // \ class
 
 // New tag creation define ('tag', ClassInstance)
-window.customElements.define("rg-map-os", RgMap);
+window.customElements.define("rg-map-mapbox", RgMap);
