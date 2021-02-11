@@ -1,27 +1,30 @@
 // Custom element
 class RgMap extends HTMLElement {
+  // CONSTRUCTOR
   constructor() {
     super();
     // Shadow DOM elements
     this._root = this.attachShadow({ mode: "open" });
 
-    // DOM elements
-    this._mapTitle = null;
-    this._mapTitleText = "";
+    // watched datas (default values")
+    this._zoom = 1; // used with attribute zoom
+    this._title = "Town"; // used with attribute map-title
 
+    // DOM elements
+    // this._zoomValue = null;
+    this._mapTitle = null;
+    this._mapDiv = null;
+    this._map = null;
     // data
-    this._zoom = 12;
     this._geoData = {
       center: {
         lat: 50.6412,
         lng: 5.5718,
       },
-      title: "Liège",
-      zoom: this._zoom,
     };
-    this._mapDiv = null;
-    this._map = null;
-  }
+  } // \ CONSTRUCTOR
+
+  // CALLBACKS
   connectedCallback() {
     console.log("rg-map added to DOM");
 
@@ -36,8 +39,10 @@ class RgMap extends HTMLElement {
       <h1 id="map-title"></h1>
       <div id="map"></div>
     `;
-    this._mapDiv = this._root.getElementById("map");
-    this._mapTitle = this._root.getElementById("map-title");
+    this._mapDiv = this._root.querySelector("#map");
+    this._mapTitle = this._root.querySelector("#map-title");
+    this._mapTitle.innerHTML = this.getAttribute("map-title") || this._title;
+    this._zoom = this.getAttribute("zoom") || this._zoom;
     this._root.appendChild(this._mapDiv);
     this._render();
   }
@@ -47,6 +52,7 @@ class RgMap extends HTMLElement {
       console.log("Maps are not ready");
       return;
     } else {
+      console.log("var this._zoom: ", this._zoom);
       this._map = L.map(this._mapDiv).setView(
         [this._geoData.center.lat, this._geoData.center.lng],
         this._zoom
@@ -73,7 +79,46 @@ class RgMap extends HTMLElement {
       ).addTo(this._map);
     }
   } // \ connectedCallback()
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    console.log("name: ", name, "oldValue: ", oldValue, "newValue: ", newValue);
+    if (this._mapDiv === null) return;
+    if (name === "zoom") {
+      console.log("Call set zoom");
+      this._setZoom(newValue);
+    }
+    if (name === "map-title") {
+      this._setTitle(newValue);
+    }
+  } // \ attributeChangedCallback()
+
+  // \ CALLBACKS
+
+  // GETTERS / OBSERVERS (used with attributeChangedCallback())
+  static get observedAttributes() {
+    return ["zoom", "map-title"];
+  }
+  // \ GETTERS / OBSERVERS
+
+  // SETTERS (used with attributeChangedCallback())
+  _setZoom(value) {
+    if (value === null) return;
+    this._zoom = parseInt(value);
+    console.log("new var this._zoom: ", this._zoom);
+    this._map.remove(); // we remove the map to avoid error "map already rendered"
+    this._render(); // and we rerender it again
+  }
+
+  _setTitle(value) {
+    console.log("SetTitle");
+    if (value === null) return;
+    this._title = value;
+    if (this._mapTitle) {
+      this._mapTitle.innerHTML = value;
+    }
+  }
+  // \ SETTERS
 } // \ class
 
 // New tag creation define ('tag', ClassInstance)
-window.customElements.define("rg-map", RgMap);
+window.customElements.define("rg-map-os", RgMap);

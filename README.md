@@ -72,3 +72,6 @@ This service must be activated.
 - [ApiNotActivatedMapError for simple html page using google-places-api](https://stackoverflow.com/questions/35700182/apinotactivatedmaperror-for-simple-html-page-using-google-places-api)
 - [Leaflet Tutorials](https://leafletjs.com/examples.html)
 - [Webcomponent with internal js and css doesn't show content](https://stackoverflow.com/questions/58272007/webcomponent-with-internal-js-and-css-doesnt-show-content)
+- [MapBox](https://www.mapbox.com/)
+- [OpenStreetMap Belgique](https://openstreetmap.be/fr/)
+- [OpenStreetMap France](https://www.openstreetmap.fr/)
