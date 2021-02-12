@@ -11,13 +11,15 @@ class RgMap extends HTMLElement {
     this._mapTitleText = "";
 
     // watched datas (default values)
-    this._zoom = 1; // used with attribute zoom
-    this._title = "Town"; // used with attribute map-title
+    // this._zoom = 12; // used with attribute zoom
+    // this._title = "Town"; // used with attribute title
     this._geoData = {
       center: {
         lat: 50.6412, // used with attribute lat
         lng: 5.5718, // used with attribute lng
       },
+      title: "Town",
+      zoom: 1,
     };
     this._mapDiv = null;
     this._map = null;
@@ -26,9 +28,6 @@ class RgMap extends HTMLElement {
     this._markersPosition = {
       location: [],
     };
-
-    this._coord = [];
-    //this._markersPositionTotal = [{}];
   } // \ CONSTRUCTOR
 
   // CALLBACKS
@@ -43,15 +42,17 @@ class RgMap extends HTMLElement {
       }
       </style>
       <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
-      <h3 id="map-title"></h3>
+      <h3 id="title"></h3>
       <div id="map"></div>
     `;
+    this._mapTitle = this._root.querySelector("#title");
     this._mapDiv = this._root.querySelector("#map");
-    this._mapTitle = this._root.querySelector("#map-title");
     // we replace the title of the map by the one provided as attribute || default
-    this._mapTitle.innerHTML = this.getAttribute("map-title") || this._title;
+    this._geoData.title = this.getAttribute("title") || this._geoData.title;
+    this._mapTitle.innerHTML = this._geoData.title;
+    this._mapTitleText = this._geoData.title;
     // we replace the zoom value by the one provided as attribute || default
-    this._zoom = this.getAttribute("zoom") || this._zoom;
+    this._geoData.zoom = this.getAttribute("zoom") || this._geoData.zoom;
     // we replace coordinates values by the ones provided as attributes || default
     this._geoData.center.lat =
       this.getAttribute("lat") || this._geoData.center.lat;
@@ -59,8 +60,12 @@ class RgMap extends HTMLElement {
       this.getAttribute("lng") || this._geoData.center.lng;
     // we add the first location marker in JSON object
     this._markersPosition["location"].push({
-      lat: this._geoData.center.lat,
-      lng: this._geoData.center.lng,
+      position: {
+        lat: this._geoData.center.lat,
+        lng: this._geoData.center.lng,
+      },
+      content: "Liège centre",
+      draggable: false,
     });
     // we create layer for markers
     this._markersLayer = new L.LayerGroup();
@@ -79,7 +84,7 @@ class RgMap extends HTMLElement {
           parseFloat(this._geoData.center.lat),
           parseFloat(this._geoData.center.lng),
         ],
-        parseInt(this._zoom)
+        parseInt(this._geoData.zoom)
       );
       // URL below is for 'mapbox'. It works for all countries but it's a private service.
       // It can be replaced by open products:
@@ -113,7 +118,7 @@ class RgMap extends HTMLElement {
       // console.log("Call set zoom");
       this._setZoom(newValue);
     }
-    if (name === "map-title") {
+    if (name === "title") {
       this._setTitle(newValue);
     }
     if (name === "lat") {
@@ -129,20 +134,26 @@ class RgMap extends HTMLElement {
   // METHODS
 
   _renderTitle() {
-    this._mapTitle.innerHTML = this._mapTitleText;
+    this._mapTitle.innerText = this._geoData.title;
+    this._mapTitleText = this._geoData.title;
   }
 
-  _addMarker() {
+  _addMarker(value) {
     // we remove all markers of the layers otherwise they will be duplicated
     this._markersLayer.clearLayers();
-    /* we map the array with all location markers coordinate and add them to the map */
+    // console.log(value);
     this._markersPosition.location.map((item) => {
-      this._marker = L.circle([item.lat, item.lng], {
-        color: "red",
-        fillColor: "#f03",
-        fillOpacity: 0.5,
-        radius: 1000,
-      });
+      console.log("item", item.position.lat);
+      this._marker = L.circle(
+        [parseFloat(item.position.lat), parseFloat(item.position.lng)],
+        {
+          color: "red",
+          fillColor: "#f03",
+          fillOpacity: 0.5,
+          radius: 1000,
+        }
+      );
+      this._marker.bindPopup(item.content);
       this._markersLayer.addLayer(this._marker); // we add the markers to the layer
     });
   }
@@ -150,19 +161,19 @@ class RgMap extends HTMLElement {
 
   // GETTERS / SETTERS (used with attributeChangedCallback())
   static get observedAttributes() {
-    return ["zoom", "map-title", "lat", "lng"];
+    return ["zoom", "title", "lat", "lng"];
   }
 
   _setZoom(value) {
     if (value === null) return;
-    this._zoom = parseInt(value);
+    this._geoData.zoom = parseInt(value);
     this._map.remove(); // we remove the map to avoid error "map already rendered"
     this._render(); // and we render it again
   }
 
   _setTitle(value) {
     if (value === null) return;
-    this._title = value;
+    this._geoData.title = value;
     if (this._mapTitle) {
       this._mapTitle.innerHTML = value;
     }
@@ -202,7 +213,7 @@ class RgMap extends HTMLElement {
     return this._mapTitleText;
   }
   set mapTitleText(value) {
-    if (this._mapTitle === value) return;
+    if (this._mapTitleText === value) return;
     this._mapTitleText = value;
     this._renderTitle();
   }
@@ -215,6 +226,7 @@ class RgMap extends HTMLElement {
     if (this._geoData === value) return;
     this._geoData = value;
     this._map.remove(); // we remove the map to avoid error "map already rendered"
+    this._renderTitle();
     this._render(); // and we render it again
   }
   // set markers
@@ -226,8 +238,24 @@ class RgMap extends HTMLElement {
     // we need this array to render all the markers on the layer
     // if we add a marker without maping an array including all the markers,
     // previous marker is replaced by new one
-    this._markersPosition["location"].push({ lat: value[0], lng: value[1] });
-    this._addMarker();
+    // this._markersPosition["location"].push({ lat: value[0], lng: value[1] });
+
+    this._markersPosition["location"] = [
+      ...this._markersPosition["location"],
+      value,
+    ];
+    this._addMarker(value);
+  }
+
+  // last added marker
+  get mostRecentMarker() {
+    const arrayLength = this._markersPosition["location"].length;
+    // console.log(arrayLength);
+    if (arrayLength > 0) {
+      return this._markersPosition["location"][arrayLength - 1];
+    } else {
+      return {};
+    }
   }
 
   // \ GETTERS / SETTERS(that will allow to programmatically get and set some datas)
