@@ -10,6 +10,9 @@ Demo on [Netlify](https://adoring-hodgkin-826062.netlify.app/)
 
 ![web-components-logo](_readme-img/web-components-logo.png)
 
+![capture.png](_readme-img/capture.png)
+
+
 ## How to use
 
 ### Change datas using HTML source code or DevTool elements
