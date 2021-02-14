@@ -6,6 +6,8 @@
 
 Web Components are a set of web platform APIs that allow you to create new custom, reusable, encapsulated HTML tags to use in web pages and web apps. If you are familiar with building components in libraries like React or Angular, Web Components should feel similar. Thanks to them, developers are no longer limited to the existing HTML tags that the browser vendors provide.
 
+Demo on [Netlify](https://adoring-hodgkin-826062.netlify.app/)
+
 ![web-components-logo](_readme-img/web-components-logo.png)
 
 ## How to use

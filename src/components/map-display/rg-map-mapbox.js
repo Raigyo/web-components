@@ -54,7 +54,6 @@ class RgMapBox extends HTMLElement {
   // CALLBACKS
   connectedCallback() {
     console.log("rg-map added to DOM");
-
     this._root.innerHTML = `
       <style>
       #map {
@@ -117,8 +116,8 @@ class RgMapBox extends HTMLElement {
           id: "mapbox/streets-v11",
           tileSize: 512,
           zoomOffset: -1,
-          accessToken:
-            "pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw",
+          accessToken: process.env.MAPBOX_KEY,
+          // "pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw",
         }
       ).addTo(this._map); // we add the layer with tiles to the map
       this._markersLayer.addTo(this._map); // we add a layer to add markers

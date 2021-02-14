@@ -102,7 +102,6 @@ class RgMapOs extends HTMLElement {
       return;
     } else {
       // we create a map with coordinates and zoom value
-      console.log(this._geoData.center.lat);
       this._map = L.map(this._mapDiv).setView(
         [
           parseFloat(this._geoData.center.lat),

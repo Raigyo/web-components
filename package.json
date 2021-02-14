@@ -4,14 +4,26 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "http-server",
-    "dev": "node server.js"
+    "start:dev": "http-server",
+    "start": "parcel index.html",
+    "build": "parcel build --public-url . index.html"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "http-server": "^0.11.1"
+  "staticFiles": {
+    "staticPath": [
+        {
+            "staticPath": "src/images",
+            "staticOutDir": "src/images"
+        }
+    ]
   },
-  "dependencies": {}
+  "devDependencies": {
+    "http-server": "^0.11.1",
+    "parcel-plugin-static-files-copy": "^2.5.1"
+  },
+  "dependencies": {
+    "parcel": "^1.12.4"
+  }
 }
