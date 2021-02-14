@@ -38,6 +38,15 @@ class RgMap extends HTMLElement {
       shadowAnchor: [4, 62], // the same for the shadow
       popupAnchor: [-3, -76], // point from which the popup should open relative to the iconAnchor
     });
+    this._markerIconNotDrag = L.icon({
+      iconUrl: "./src/images/marker-icon-not-drag.png",
+      shadowUrl: "./src/images/marker-shadow.png",
+      iconSize: [38, 65], // size of the icon
+      shadowSize: [50, 64], // size of the shadow
+      iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
+      shadowAnchor: [4, 62], // the same for the shadow
+      popupAnchor: [-3, -76], // point from which the popup should open relative to the iconAnchor
+    });
   } // \ CONSTRUCTOR
 
   // CALLBACKS
@@ -156,11 +165,25 @@ class RgMap extends HTMLElement {
         [parseFloat(item.position.lat), parseFloat(item.position.lng)],
         {
           draggable: item.draggable,
-          icon: this._markerIcon,
+          // we change marker color according draggable state
+          icon: item.draggable ? this._markerIcon : this._markerIconNotDrag,
         }
       );
       this._marker.bindPopup(item.content);
       this._markersLayer.addLayer(this._marker); // we add the markers to the layer
+      // if the marker is draggable we retrieve its new position
+      if (item.draggable) {
+        this._marker.on("dragend", (event) => {
+          this._markerLat = event.target._latlng.lat;
+          item.position.lat = this._markerLat;
+          this._markerLng = event.target._latlng.lng;
+          item.position.lng = this._markerLng;
+          console.log("lat: ", this._markerLat, "lng: ", this._markerLng);
+          this._marker._popup.setContent(
+            `lat: ${this._markerLat} - lng: ${this._markerLng}`
+          );
+        });
+      }
     });
   }
   // \ METHODS
