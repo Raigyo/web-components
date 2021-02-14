@@ -1,6 +1,6 @@
 # Web components
 
-*January 2021*
+*January - February 2021*
 
 > 🔨 Web components overview using maps. From udemy '[Les Web Components par la pratique](https://www.udemy.com/course/les-web-components-par-la-pratique/)'. The content of the training has been improved using Open Street Maps and leaflet.js.
 
