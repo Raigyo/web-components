@@ -28,6 +28,16 @@ class RgMap extends HTMLElement {
     this._markersPosition = {
       location: [],
     };
+    // Marker icon
+    this._markerIcon = L.icon({
+      iconUrl: "./src/images/marker-icon.png",
+      shadowUrl: "./src/images/marker-shadow.png",
+      iconSize: [38, 65], // size of the icon
+      shadowSize: [50, 64], // size of the shadow
+      iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
+      shadowAnchor: [4, 62], // the same for the shadow
+      popupAnchor: [-3, -76], // point from which the popup should open relative to the iconAnchor
+    });
   } // \ CONSTRUCTOR
 
   // CALLBACKS
@@ -64,8 +74,8 @@ class RgMap extends HTMLElement {
         lat: this._geoData.center.lat,
         lng: this._geoData.center.lng,
       },
-      content: "Liège centre",
-      draggable: false,
+      content: "Popup demo",
+      draggable: true,
     });
     // we create layer for markers
     this._markersLayer = new L.LayerGroup();
@@ -141,16 +151,12 @@ class RgMap extends HTMLElement {
   _addMarker(value) {
     // we remove all markers of the layers otherwise they will be duplicated
     this._markersLayer.clearLayers();
-    // console.log(value);
     this._markersPosition.location.map((item) => {
-      console.log("item", item.position.lat);
-      this._marker = L.circle(
+      this._marker = L.marker(
         [parseFloat(item.position.lat), parseFloat(item.position.lng)],
         {
-          color: "red",
-          fillColor: "#f03",
-          fillOpacity: 0.5,
-          radius: 1000,
+          draggable: item.draggable,
+          icon: this._markerIcon,
         }
       );
       this._marker.bindPopup(item.content);

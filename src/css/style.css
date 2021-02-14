@@ -1,0 +1,7 @@
+.map-group {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  flex-basis: 100%;
+}
+

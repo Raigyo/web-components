@@ -8,6 +8,21 @@ Web Components are a set of web platform APIs that allow you to create new custo
 
 ![web-components-logo](_readme-img/web-components-logo.png)
 
+**Replace map with new location**
+
+mapDiv = document.getElementById('my-map');
+mapDiv.geoData = {center:{lat:48.4, lng:-4.4833}, zoom: 12, title: 'Brest'}
+
+**Add a marker**
+
+mapDiv = document.getElementById('my-map');
+mapDiv.markersPositions  = {position: {lat: 50.61135, lng: 5.59943}, content: "Angleur", draggable: false}
+
+**Display most recent marker inserted**
+
+mapDiv = document.getElementById('my-map');
+mapDiv.mostRecentMarker
+
 ## Concepts: three main technologies
 
 - **Custom elements**: A set of JavaScript APIs that allow you to define custom elements and their behavior, which can then be used as desired in your user interface.
@@ -45,23 +60,6 @@ And attributes are provided in the HTML itself. Here *alt*, *width* and *height*
 ````js
 <img src="/path/to/img.svg" alt="My Image" width="150" height="250">
 ````
-
-## Google maps
-
-An account on [https://console.cloud.google.com/](https://console.cloud.google.com/) is needed.
-Then create an application and generate an API key.
-
-In HTML:
-
-````html
-<script async
-    src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
-</script>
-````
-
-This service must be activated.
-
-![google-cloud-activate.png](_readme-img/google-cloud-activate.png)
 
 ## Useful links
 - [codeconcept/webcompomisc](https://github.com/codeconcept/webcompomisc)
