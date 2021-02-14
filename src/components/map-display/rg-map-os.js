@@ -1,6 +1,5 @@
 // Custom element
-
-class RgMapBox extends HTMLElement {
+class RgMapOs extends HTMLElement {
   // CONSTRUCTOR
   constructor() {
     super();
@@ -10,6 +9,7 @@ class RgMapBox extends HTMLElement {
     // DOM elements
     this._mapTitle = null;
     this._mapTitleText = "";
+    this._urlMaps = null;
 
     // watched datas (default values)
     // this._zoom = 12; // used with attribute zoom
@@ -68,6 +68,8 @@ class RgMapBox extends HTMLElement {
     `;
     this._mapTitle = this._root.querySelector("#title");
     this._mapDiv = this._root.querySelector("#map");
+    // url of maps
+    this._urlMaps = this.getAttribute("url");
     // we replace the title of the map by the one provided as attribute || default
     this._geoData.title = this.getAttribute("title") || this._geoData.title;
     this._mapTitle.innerHTML = this._geoData.title;
@@ -100,6 +102,7 @@ class RgMapBox extends HTMLElement {
       return;
     } else {
       // we create a map with coordinates and zoom value
+      console.log(this._geoData.center.lat);
       this._map = L.map(this._mapDiv).setView(
         [
           parseFloat(this._geoData.center.lat),
@@ -107,20 +110,14 @@ class RgMapBox extends HTMLElement {
         ],
         parseInt(this._geoData.zoom)
       );
-
-      L.tileLayer(
-        "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
-        {
-          attribution:
-            'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-          maxZoom: 18,
-          id: "mapbox/streets-v11",
-          tileSize: 512,
-          zoomOffset: -1,
-          accessToken:
-            "pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw",
-        }
-      ).addTo(this._map); // we add the layer with tiles to the map
+      L.tileLayer(this._urlMaps, {
+        attribution:
+          'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 18,
+        id: "mapbox/streets-v11",
+        tileSize: 512,
+        zoomOffset: -1,
+      }).addTo(this._map); // we add the layer with tiles to the map
       this._markersLayer.addTo(this._map); // we add a layer to add markers
     }
     this._addMarker();
@@ -319,4 +316,4 @@ class RgMapBox extends HTMLElement {
 // \ CLASS
 
 // New tag creation define ('tag', ClassInstance)
-window.customElements.define("rg-map-mapbox", RgMapBox);
+window.customElements.define("rg-map-os", RgMapOs);

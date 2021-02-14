@@ -4,12 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "http-server"
+    "start": "http-server",
+    "dev": "node server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "http-server": "^0.11.1"
-  }
+  },
+  "dependencies": {}
 }
