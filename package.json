@@ -20,7 +20,7 @@
     ]
   },
   "devDependencies": {
-    "http-server": "^0.11.1",
+    "http-server": "^0.12.3",
     "parcel-plugin-static-files-copy": "^2.5.1"
   },
   "dependencies": {
