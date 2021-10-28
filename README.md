@@ -31,7 +31,6 @@ Components can be added using HTML and 4 attributes can be changed:
 The id is mandatory to change datas programmatically in DevTool console.
 
 ![attribute-devtool](_readme-img/attribute-devtool.png)
-attribute-devtool.png
 
 ### Change data using DevTool console
 
